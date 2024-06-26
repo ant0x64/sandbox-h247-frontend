@@ -1,11 +1,18 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+} from '@ionic/angular/standalone';
+
+import { FlatComponent } from '../../components/flat/flat.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, FlatComponent],
 })
 export class HomePage {
   constructor() {}

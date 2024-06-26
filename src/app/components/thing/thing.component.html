@@ -1,0 +1,8 @@
+<div class="thing" [ngClass]="data.type" [ngClass]="{ 'selected': (selected$ | async) === data.id }" (click)="click(); $event.stopPropagation()">
+  <div class="title">{{ data.size }} - {{ data.type }}</div>
+  <ion-list>
+    <ion-item *ngFor="let item of elements$ | async">
+      <app-thing [data]="item"/>
+    </ion-item> 
+  </ion-list>
+</div>
