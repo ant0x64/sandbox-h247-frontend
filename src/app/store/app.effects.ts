@@ -45,9 +45,9 @@ export class AppEffects {
   });
 
   // ATTACH
-  tryAttach$ = createEffect(() => {
+  attach$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(AppActions.thingTryAttach),
+      ofType(AppActions.thingAttach),
       exhaustMap(({ element, ref }) => {
         return this.apiService.attach(element, ref).pipe(
           map((attach) => {
@@ -64,6 +64,57 @@ export class AppEffects {
           ),
           finalize(() => {
             console.log('Attaching handled');
+          })
+        );
+      })
+    );
+  });
+
+  // CREATE
+  create$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AppActions.thingCreate),
+      exhaustMap(({ thing }) => {
+        return this.apiService.create(thing).pipe(
+          map((thing) => {
+            return AppActions.thingCreatedSuccess({
+              // @todo map dto to model
+              thing: thing as ThingInterface,
+            });
+          }),
+          catchError((message) =>
+            of(
+              AppActions.messageAdd({
+                message: { text: message, type: 'error' },
+              })
+            )
+          ),
+          finalize(() => {
+            console.log('Attaching handled');
+          })
+        );
+      })
+    );
+  });
+
+  // DELETE
+  delete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AppActions.thingDelete),
+      exhaustMap(({ thingId }) => {
+        return this.apiService.delete(thingId).pipe(
+          map(() => {
+            return AppActions.thingDeletedSuccess({ thingId });
+          }),
+          catchError((message) =>
+            of(
+              AppActions.messageAdd({
+                message: { text: message, type: 'error' },
+              })
+            )
+          ),
+          finalize(() => {
+            console.log('Deleting handled');
           })
         );
       })

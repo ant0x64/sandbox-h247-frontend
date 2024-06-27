@@ -33,11 +33,14 @@ export const selectNotAttachedThings = createSelector(
   (things, attaches) => {
     const filterIds: AttachInterface['thingId'][] = [];
 
-    attaches.reduce((prev, item) => {
-      if (item.containerId !== null) {
-        prev.push(item.thingId);
+    attaches.reduce((result, item) => {
+      if (
+        item.containerId !== null &&
+        things.find((t) => t.id === item.containerId)
+      ) {
+        result.push(item.thingId);
       }
-      return prev;
+      return result;
     }, filterIds);
 
     return things.filter((thing) => !filterIds.includes(thing.id));

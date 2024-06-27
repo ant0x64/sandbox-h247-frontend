@@ -8,15 +8,37 @@ import {
   selectAttachedThings,
 } from 'src/app/store/app.selector';
 import { Observable, take } from 'rxjs';
-import { IonItem, IonList, IonContent } from '@ionic/angular/standalone';
-import { thingSelect, thingTryAttach } from 'src/app/store/app.actions';
+import {
+  IonItem,
+  IonList,
+  IonContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCardContent,
+  IonText,
+} from '@ionic/angular/standalone';
+import { thingSelect, thingAttach } from 'src/app/store/app.actions';
 
 @Component({
   selector: 'app-thing',
   templateUrl: './thing.component.html',
   styleUrl: './thing.component.scss',
   standalone: true,
-  imports: [IonContent, IonList, IonItem, AsyncPipe, NgFor, NgIf, NgClass],
+  imports: [
+    IonText,
+    IonCardContent,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonCardHeader,
+    IonContent,
+    IonList,
+    IonItem,
+    AsyncPipe,
+    NgFor,
+    NgIf,
+    NgClass,
+  ],
 })
 export class ThingComponent implements OnInit {
   @Input() data: ThingInterface = {
@@ -24,6 +46,8 @@ export class ThingComponent implements OnInit {
     size: 0,
     type: 'container',
   }; // to avoid checking on undefined
+
+  protected freeSize: ThingInterface['size'] = 0;
 
   protected selected$: Observable<ThingInterface['id'] | null>;
   protected elements$: Observable<ThingInterface[]>;
@@ -36,6 +60,13 @@ export class ThingComponent implements OnInit {
   // input data is undefined in constructor ...
   ngOnInit(): void {
     this.elements$ = this.store.select(selectAttachedThings(this.data.id));
+    this.elements$.pipe().subscribe((childs) => {
+      let free = this.data.size;
+      childs.forEach((child) => {
+        free -= child.size;
+      });
+      this.freeSize = free;
+    });
   }
 
   click() {
@@ -45,7 +76,7 @@ export class ThingComponent implements OnInit {
           this.store.dispatch(thingSelect({ selected: null }));
         } else {
           this.store.dispatch(
-            thingTryAttach({ element: selected, ref: this.data.id })
+            thingAttach({ element: selected, ref: this.data.id })
           );
         }
       } else {

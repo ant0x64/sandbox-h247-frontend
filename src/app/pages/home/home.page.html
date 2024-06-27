@@ -1,18 +1,22 @@
+<style>
+  :host {
+    app-form {
+      display: block;
+      margin-bottom: 1.5em;
+    }
+  }
+</style>
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Things Flat
+      Flat of Things
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <app-flat/>
-  </ion-content>
+<ion-content class="ion-padding">
+  <h1 class="ion-margin-bottom">Create and move things around in your flat.</h1>
+  <app-form class="block"/>
+  <app-flat/>
 </ion-content>

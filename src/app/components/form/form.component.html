@@ -1,1 +1,39 @@
-<app-form></app-form>
+<ion-button id="add-modal" expand="block">Add Thing</ion-button>
+<ion-modal #modal trigger="add-modal" (willDismiss)="cancel()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>Add Thing</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <form (ngSubmit)="form.valid? submit() : form.control.markAllAsTouched()" #form="ngForm" class="auto-height">
+        <ion-item class="ion-margin-bottom">
+          <ion-select label="Select Type" label-placement="floating" [(ngModel)]="data.type" name="type" required>
+            <ion-select-option value="element">Element</ion-select-option>
+            <ion-select-option value="container">Container</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item class="ion-margin-bottom" lines="none">
+          <ion-input
+            label="Set the size (1-100)"
+            type="number"
+            min="1"
+            max="100"
+            [(ngModel)]="data.size"
+            name="size"
+            required
+            errorText="The size should be in the range of 1-100"
+          ></ion-input>
+  
+        </ion-item>
+        <ion-button expand="block" type="submit" color="primary">
+          Create
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

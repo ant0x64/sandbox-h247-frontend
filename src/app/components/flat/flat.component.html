@@ -1,5 +1,6 @@
-<ion-list>
-  <ion-item *ngFor="let item of elements$ | async">
-    <app-thing [data]="item" #thing/>
-  </ion-item> 
-</ion-list>
+<app-thing [data]="item" #thing *ngFor="let item of elements$ | async"/>
+<ion-fab vertical="bottom" horizontal="end" *ngIf="this.selected$ | async; let selected">
+  <ion-fab-button (click)="deleteAction(selected)">
+    <ion-icon name="trash-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

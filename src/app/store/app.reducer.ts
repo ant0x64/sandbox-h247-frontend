@@ -11,6 +11,8 @@ import * as AppActions from './app.actions';
 export const reducer = createReducer(
   initialState,
 
+  // APP
+
   on(AppActions.loadSucess, (state, { attaches, things }) => {
     return {
       ...state,
@@ -20,6 +22,22 @@ export const reducer = createReducer(
       },
     };
   }),
+
+  on(AppActions.messageAdd, (state, { message }): AppState => {
+    return {
+      ...state,
+      messages: [...state.messages, message],
+    };
+  }),
+
+  on(AppActions.messageClear, (state): AppState => {
+    return {
+      ...state,
+      messages: [],
+    };
+  }),
+
+  // THING
 
   on(AppActions.thingAttachedSuccess, (state, { attach }) => {
     return {
@@ -47,17 +65,30 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AppActions.messageAdd, (state, { message }): AppState => {
+  on(AppActions.thingCreatedSuccess, (state, { thing }) => {
     return {
       ...state,
-      messages: [...state.messages, message],
+      data: {
+        things: thingAdapter.addOne(thing, state.data.things),
+        attaches: state.data.attaches,
+      },
     };
   }),
 
-  on(AppActions.messageClear, (state): AppState => {
+  on(AppActions.thingDeletedSuccess, (state, { thingId }) => {
+    const things = Object.values(
+      thingAdapter.removeOne(thingId, state.data.things).entities
+    ) as [];
+    // @todo update only children
+    const updated = thingAdapter.setAll(things, state.data.things);
+
     return {
       ...state,
-      messages: [],
+      selected: null,
+      data: {
+        things: updated,
+        attaches: state.data.attaches,
+      },
     };
   })
 );

@@ -16,7 +16,6 @@ export default class ApiService {
 
   load() {
     return new Observable<LoadDto>((_) => {
-      // mock
       _.next({
         things: [
           { id: '1', size: 50, type: 'container' },
@@ -36,11 +35,23 @@ export default class ApiService {
   }
 
   create(thing: Omit<ThingDto, 'id'>) {
-    return this.http.post(`${this.api_url}/thing`, thing);
+    // @todo create mapper
+    return new Observable<ThingDto>((_) => {
+      _.next({
+        ...thing,
+        id: Date.now().toString()
+      });
+      _.complete();
+    });
+    //return this.http.post(`${this.api_url}/thing`, thing) as Observable<ThingDto>;
   }
 
-  delete(thing: ThingDto) {
-    return this.http.delete(`${this.api_url}/thing`);
+  delete(thing: ThingDto['id']) {
+    return new Observable<ThingDto>((_) => {
+      _.next();
+      _.complete();
+    });
+    //return this.http.delete(`${this.api_url}/thing`);
   }
 
   attach(
@@ -48,8 +59,8 @@ export default class ApiService {
     ref: AttachDto['containerId']
   ): Observable<AttachDto> {
     return new Observable<AttachDto>((_) => {
-            _.error('Any error');
-      _.complete();
+      // _.error('Any error');
+      // _.complete();
       _.next({
         thingId: element,
         containerId: ref,
