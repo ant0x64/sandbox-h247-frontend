@@ -43,15 +43,17 @@ export const reducer = createReducer(
     return {
       ...state,
       data: {
-        attaches: attachAdapter.updateOne(
-          {
-            id: attach.thingId,
-            changes: {
-              containerId: attach.containerId,
-            },
-          },
-          state.data.attaches
-        ),
+        attaches: !(state.data.attaches.ids as string[]).includes(attach.thing)
+          ? attachAdapter.addOne(attach, state.data.attaches)
+          : attachAdapter.updateOne(
+              {
+                id: attach.thing,
+                changes: {
+                  container: attach.container,
+                },
+              },
+              state.data.attaches
+            ),
         things: state.data.things,
       },
       selected: null,

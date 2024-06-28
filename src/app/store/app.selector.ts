@@ -31,14 +31,14 @@ export const selectNotAttachedThings = createSelector(
   selectThings,
   selectAttaches,
   (things, attaches) => {
-    const filterIds: AttachInterface['thingId'][] = [];
+    const filterIds: AttachInterface['thing'][] = [];
 
     attaches.reduce((result, item) => {
       if (
-        item.containerId !== null &&
-        things.find((t) => t.id === item.containerId)
+        item.container !== null &&
+        things.find((t) => t.id === item.container)
       ) {
-        result.push(item.thingId);
+        result.push(item.thing);
       }
       return result;
     }, filterIds);
@@ -48,14 +48,14 @@ export const selectNotAttachedThings = createSelector(
 );
 
 export const selectAttachedThings = (
-  containerId: AttachInterface['containerId']
+  container: AttachInterface['container']
 ) =>
   createSelector(selectThings, selectAttaches, (things, attaches) => {
-    const ids: AttachInterface['thingId'][] = [];
+    const ids: AttachInterface['thing'][] = [];
 
     attaches.reduce((prev, item) => {
-      if (item.containerId === containerId) {
-        prev.push(item.thingId);
+      if (item.container === container) {
+        prev.push(item.thing);
       }
       return prev;
     }, ids);

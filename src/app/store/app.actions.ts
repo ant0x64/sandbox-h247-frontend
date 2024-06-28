@@ -31,8 +31,8 @@ export const load = createAction(ActionsList.LOAD);
 export const thingAttach = createAction(
   ActionsList.THING_ATTACH,
   props<{
-    element: AttachInterface['thingId'];
-    ref: AttachInterface['containerId'];
+    element: AttachInterface['thing'];
+    ref: AttachInterface['container'];
   }>()
 );
 

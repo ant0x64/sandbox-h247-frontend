@@ -4,7 +4,12 @@
 (click)="click(); $event.stopPropagation()">
   <ion-card-header>
     <ion-card-title>{{ data.type }}</ion-card-title>
-    <ion-card-subtitle>Free: <ion-text color="primary">{{ freeSize }}</ion-text> / {{ data.size }}</ion-card-subtitle>
+    @if (data.type === 'container') {
+      <ion-card-subtitle>Size: <ion-text color="primary">{{ data.size  }}</ion-text> / Free: {{ freeSize }}</ion-card-subtitle>
+    }
+    @else {
+      <ion-card-subtitle>Size: <ion-text color="primary">{{ data.size }}</ion-text></ion-card-subtitle>
+    }
   </ion-card-header>
   <ion-card-content>
       <app-thing *ngFor="let item of elements$ | async" [data]="item"/>

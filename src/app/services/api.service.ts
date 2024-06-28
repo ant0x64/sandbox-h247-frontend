@@ -15,63 +15,26 @@ export default class ApiService {
   constructor(private http: HttpClient) {}
 
   load() {
-    return new Observable<LoadDto>((_) => {
-      _.next({
-        things: [
-          { id: '1', size: 50, type: 'container' },
-          { id: '2', size: 10, type: 'element' },
-          { id: '3', size: 10, type: 'element' },
-          { id: '4', size: 40, type: 'element' },
-        ],
-        attaches: [
-          { thingId: '3', containerId: '1' },
-          { thingId: '2', containerId: '1' },
-          { thingId: '4', containerId: null },
-        ],
-      });
-      _.complete();
-    });
-    //return this.http.get<LoadDto>(`${this.api_url}/load`);
+    return this.http.get<LoadDto>(`${this.api_url}/load`);
   }
 
   create(thing: Omit<ThingDto, 'id'>) {
-    // @todo create mapper
-    return new Observable<ThingDto>((_) => {
-      _.next({
-        ...thing,
-        id: Date.now().toString()
-      });
-      _.complete();
-    });
-    //return this.http.post(`${this.api_url}/thing`, thing) as Observable<ThingDto>;
+    return this.http.post(`${this.api_url}/create`, thing) as Observable<ThingDto>;
   }
 
-  delete(thing: ThingDto['id']) {
-    return new Observable<ThingDto>((_) => {
-      _.next();
-      _.complete();
-    });
-    //return this.http.delete(`${this.api_url}/thing`);
+  delete(id: ThingDto['id']) {
+    return this.http.delete(`${this.api_url}/delete/${id}`);
   }
 
   attach(
-    element: AttachDto['thingId'],
-    ref: AttachDto['containerId']
+    element: AttachDto['thing'],
+    ref: AttachDto['container']
   ): Observable<AttachDto> {
-    return new Observable<AttachDto>((_) => {
-      // _.error('Any error');
-      // _.complete();
-      _.next({
-        thingId: element,
-        containerId: ref,
-      });
-      _.complete();
+    return this.http.post(`${this.api_url}/attach`, {
+      thing: element,
+      container: ref,
+    }).pipe((res) => {
+      return res as Observable<AttachDto>;
     });
-    // return this.http.post(`${this.api_url}/attach`, {
-    //   thingId: element,
-    //   containerId: ref,
-    // }).pipe((res) => {
-    //   return res as Observable<AttachDto>;
-    // });
   }
 }
