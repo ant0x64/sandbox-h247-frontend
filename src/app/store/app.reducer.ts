@@ -7,6 +7,7 @@ import {
   AppState,
 } from './app.state';
 import * as AppActions from './app.actions';
+import { MessageInterface } from '../models/message.model';
 
 export const reducer = createReducer(
   initialState,
@@ -70,6 +71,13 @@ export const reducer = createReducer(
   on(AppActions.thingCreatedSuccess, (state, { thing }) => {
     return {
       ...state,
+      messages: [
+        ...state.messages,
+        {
+          text: 'Thing created',
+          type: 'success',
+        } as MessageInterface,
+      ],
       data: {
         things: thingAdapter.addOne(thing, state.data.things),
         attaches: state.data.attaches,

@@ -55,10 +55,13 @@ export class AppEffects {
               attach,
             });
           }),
-          catchError((message) =>
+          catchError(({ error }) =>
             of(
               AppActions.messageAdd({
-                message: { text: message, type: 'error' },
+                message: {
+                  text: error.message || 'Attach failure',
+                  type: 'error',
+                },
               })
             )
           ),
@@ -82,10 +85,13 @@ export class AppEffects {
               thing: thing as ThingInterface,
             });
           }),
-          catchError((message) =>
+          catchError(({ error }) =>
             of(
               AppActions.messageAdd({
-                message: { text: message, type: 'error' },
+                message: {
+                  text: error.message || 'Create failure',
+                  type: 'error',
+                },
               })
             )
           ),
@@ -106,10 +112,13 @@ export class AppEffects {
           map(() => {
             return AppActions.thingDeletedSuccess({ thingId });
           }),
-          catchError((message) =>
+          catchError(({ error }) =>
             of(
               AppActions.messageAdd({
-                message: { text: message, type: 'error' },
+                message: {
+                  text: error.message || 'Delete failure',
+                  type: 'error',
+                },
               })
             )
           ),
