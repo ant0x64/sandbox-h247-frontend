@@ -3,7 +3,7 @@ import { createAction, props } from '@ngrx/store';
 import { ThingInterface } from '../models/thing.model';
 import { AttachInterface } from '../models/attach.model';
 import { AppState } from './app.state';
-import { ThingDto } from '../services/api.dto';
+import { AuthDto, ThingDto, TokenDto } from '../models/api.dto';
 
 export const enum ActionsList {
   LOAD = '[EFFECT] Load',
@@ -21,6 +21,11 @@ export const enum ActionsList {
 
   MESSAGE_ADD = '[API] Message Added',
   MESSAGE_CLEAR = '[API] Message Clear',
+
+  LOGOUT = '[AUTH] Logout',
+  LOGIN = '[AUTH] Login',
+  LOGIN_SUCCESS = '[AUTH] Login Success',
+  UNAUTHORIZED = '[AUTH] Unauthorized',
 }
 
 // VIEW
@@ -95,3 +100,12 @@ export const messageAdd = createAction(
 );
 
 export const messageClear = createAction(ActionsList.MESSAGE_CLEAR);
+
+// TO SORT ..
+export const login = createAction(
+  ActionsList.LOGIN,
+  props<{ authDto: AuthDto }>()
+);
+export const loginSuccess = createAction(ActionsList.LOGIN_SUCCESS);
+export const logout = createAction(ActionsList.LOGOUT);
+export const unauthorized = createAction(ActionsList.UNAUTHORIZED);

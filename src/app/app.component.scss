@@ -1,0 +1,10 @@
+@media screen and (min-width: 769px) {
+  .app-wrapper {
+    max-width: 40em;
+    height: 100%;
+    margin: 0 auto;
+    z-index: 1;
+    display: block;
+    box-shadow: 0 0 5em #acacac;
+  }
+}

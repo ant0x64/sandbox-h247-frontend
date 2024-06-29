@@ -35,3 +35,9 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+:root {
+  --app-color-background-selected: #b0e770;
+  --app-color-not-selected-container-title: #f44336;
+  --app-color-not-selected-element-title: #9e9e9e;
+}

@@ -38,6 +38,27 @@ export const reducer = createReducer(
     };
   }),
 
+  on(AppActions.unauthorized, (state): AppState => {
+    return {
+      ...state,
+      authorized: false,
+    };
+  }),
+
+  on(AppActions.login, (state): AppState => {
+    return {
+      ...state,
+      loading: true,
+    };
+  }),
+
+  on(AppActions.loginSuccess, (state): AppState => {
+    return {
+      ...state,
+      authorized: true,
+    };
+  }),
+
   // THING
 
   on(AppActions.thingAttachedSuccess, (state, { attach }) => {

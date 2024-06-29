@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgForOf, AsyncPipe, NgIf } from '@angular/common';
+import { NgForOf, AsyncPipe, NgIf, NgClass } from '@angular/common';
 
 import { Store } from '@ngrx/store';
 import { ThingInterface } from 'src/app/models/thing.model';
@@ -17,8 +17,7 @@ import {
   IonLabel,
   IonFab,
   IonFabButton,
-  IonIcon,
-} from '@ionic/angular/standalone';
+  IonIcon, IonCol, IonRow, IonGrid } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons'; // Import this
 import { trashOutline } from 'ionicons/icons';
@@ -31,7 +30,7 @@ import { thingDelete } from 'src/app/store/app.actions';
   templateUrl: './flat.component.html',
   styleUrl: './flat.component.scss',
   standalone: true,
-  imports: [
+  imports: [IonGrid, IonRow, IonCol, 
     IonIcon,
     IonFabButton,
     IonFab,
@@ -41,6 +40,7 @@ import { thingDelete } from 'src/app/store/app.actions';
     IonContent,
     NgForOf,
     NgIf,
+    NgClass,
     AsyncPipe,
     ThingComponent,
   ],

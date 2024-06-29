@@ -2,3 +2,14 @@ ion-fab {
   margin-bottom: var(--ion-safe-area-bottom, 0);
   position: fixed;
 }
+
+.thing-selected ::ng-deep .thing {
+  &.container {
+    &:not(.selected) > ion-card-header > ion-card-title {
+      color:var(--app-color-not-selected-container-title);
+    }
+  }
+  &.element:not(.selected) > ion-card-header > ion-card-title {
+    color:var(--app-color-not-selected-element-title);
+  }
+}

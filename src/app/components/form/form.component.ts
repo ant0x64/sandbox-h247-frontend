@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ThingInterface } from '../../models/thing.model';
 import {
@@ -47,7 +47,7 @@ import { NgIf } from '@angular/common';
     IonSelectOption,
   ],
 })
-export class FormComponent {
+export class FormComponent implements OnDestroy {
   @ViewChild(IonModal) modal: IonModal | undefined;
 
   constructor(private store: Store) {}
@@ -73,5 +73,9 @@ export class FormComponent {
         },
       })
     );
+  }
+
+  ngOnDestroy(): void {
+    this.modal?.dismiss();
   }
 }

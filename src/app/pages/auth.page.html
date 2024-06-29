@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Authorization
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="form.valid? authorize() : form.control.markAllAsTouched()" #form="ngForm">
+    <ion-item class="ion-margin-bottom" lines="none">
+      <ion-input
+        label="Login"
+        type="text"
+        [(ngModel)]="data.login"
+        name="login"
+        required
+        errorText="Field required"
+        labelPlacement="floating"
+      ></ion-input>
+    </ion-item>
+    <ion-item class="ion-margin-bottom" lines="none">
+      <ion-input
+        label="Password"
+        type="password"
+        [(ngModel)]="data.password"
+        name="password"
+        required
+        errorText="Field required"
+        labelPlacement="floating"
+      ></ion-input>
+
+    </ion-item>
+    <ion-button expand="block" type="submit" color="primary">
+      Login
+    </ion-button>
+  </form>
+</ion-content>

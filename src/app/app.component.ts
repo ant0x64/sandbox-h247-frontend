@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AlertController } from '@ionic/angular';
 
 import { Store } from '@ngrx/store';
-import { load, messageClear } from './store/app.actions';
+import { messageClear } from './store/app.actions';
 import { selectMessages } from './store/app.selector';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
+  styleUrl: 'app.component.scss',
   standalone: true,
-  imports: [IonApp, IonRouterOutlet],
+  imports: [RouterModule],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(private store: Store, private alertController: AlertController) {
     // @todo put into the service
     this.store
@@ -33,8 +34,5 @@ export class AppComponent implements OnInit {
         // @todo queue on closed
         this.store.dispatch(messageClear());
       });
-  }
-  ngOnInit() {
-    this.store.dispatch(load());
   }
 }

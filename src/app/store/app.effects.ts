@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, exhaustMap, catchError, finalize } from 'rxjs/operators';
 
 import ApiService from '../services/api.service';
@@ -9,12 +9,56 @@ import { AttachInterface } from '../models/attach.model';
 import { ThingInterface } from '../models/thing.model';
 
 import * as AppActions from './app.actions';
+import { Router } from '@angular/router';
+import AuthService from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppEffects {
-  constructor(private actions$: Actions, private apiService: ApiService) {}
+  constructor(
+    private actions$: Actions,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  logout$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AppActions.logout),
+      map(() => {
+        this.router.navigate(['/auth']);
+        return AppActions.unauthorized();
+      })
+    );
+  });
+
+  login$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AppActions.login),
+      exhaustMap(({ authDto }) => {
+        return this.authService.auth(authDto).pipe(
+          map(() => {
+            this.router.navigate(['/']);
+            return AppActions.loginSuccess();
+          }),
+          catchError((response) =>
+            of(
+              AppActions.messageAdd({
+                message: {
+                  text:
+                    response.status === 401
+                      ? 'Wrong credentials'
+                      : 'Auth failure',
+                  type: 'error',
+                },
+              })
+            )
+          ),
+        );
+      })
+    );
+  });
 
   // LOAD
   load$ = createEffect(() => {
@@ -36,9 +80,6 @@ export class AppEffects {
               })
             )
           ),
-          finalize(() => {
-            console.log('Loading handled');
-          })
         );
       })
     );
@@ -65,9 +106,6 @@ export class AppEffects {
               })
             )
           ),
-          finalize(() => {
-            console.log('Attaching handled');
-          })
         );
       })
     );
@@ -95,9 +133,6 @@ export class AppEffects {
               })
             )
           ),
-          finalize(() => {
-            console.log('Attaching handled');
-          })
         );
       })
     );
@@ -122,9 +157,6 @@ export class AppEffects {
               })
             )
           ),
-          finalize(() => {
-            console.log('Deleting handled');
-          })
         );
       })
     );

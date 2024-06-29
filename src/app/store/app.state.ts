@@ -13,6 +13,7 @@ export interface AppState {
     attaches: AttachsState;
   };
   loading: boolean;
+  authorized: boolean;
   selected: ThingInterface['id'] | null;
   messages: MessageInterface[]
 }
@@ -28,6 +29,7 @@ export const initialState: AppState = {
     attaches: attachAdapter.getInitialState(),
   },
   loading: false,
+  authorized: false,
   selected: null,
   messages: []
 };

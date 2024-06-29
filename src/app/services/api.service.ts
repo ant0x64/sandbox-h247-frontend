@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 
-import { LoadDto, ThingDto, AttachDto } from './api.dto';
+import { LoadDto, ThingDto, AttachDto } from '../models/api.dto';
 import { Observable } from 'rxjs';
 
 @Injectable({

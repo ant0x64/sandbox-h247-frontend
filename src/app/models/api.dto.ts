@@ -1,5 +1,5 @@
-import { ThingInterface } from '../models/thing.model';
-import { AttachInterface } from '../models/attach.model';
+import { ThingInterface } from './thing.model';
+import { AttachInterface } from './attach.model';
 
 export interface ThingDto extends Omit<ThingInterface, 'id'> {
   id?: string;
@@ -15,4 +15,13 @@ export interface AttachDto extends AttachInterface {
 export interface LoadDto {
   things: ThingDto[];
   attaches: AttachDto[];
+}
+
+export interface TokenDto {
+  accessToken: string;
+}
+
+export interface AuthDto {
+  login: string;
+  password: string;
 }
