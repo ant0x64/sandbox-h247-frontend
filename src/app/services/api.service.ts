@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export default class ApiService {
+export class ApiService {
   private api_url = environment.api_url;
 
   constructor(private http: HttpClient) {}
@@ -19,7 +19,7 @@ export default class ApiService {
   }
 
   create(thing: Omit<ThingDto, 'id'>) {
-    return this.http.post(`${this.api_url}/create`, thing) as Observable<ThingDto>;
+    return this.http.post<ThingDto>(`${this.api_url}/create`, thing);
   }
 
   delete(id: ThingDto['id']) {
@@ -30,11 +30,9 @@ export default class ApiService {
     element: AttachDto['thing'],
     ref: AttachDto['container']
   ): Observable<AttachDto> {
-    return this.http.post(`${this.api_url}/attach`, {
+    return this.http.post<AttachDto>(`${this.api_url}/attach`, {
       thing: element,
       container: ref,
-    }).pipe((res) => {
-      return res as Observable<AttachDto>;
     });
   }
 }

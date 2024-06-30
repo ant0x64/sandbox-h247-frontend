@@ -1,5 +1,8 @@
-@media screen and (min-width: 769px) {
-  .app-wrapper {
+.app-wrapper {
+  display: inline;
+
+  // For desktop
+  @media screen and (min-width: 769px) {
     max-width: 40em;
     height: 100%;
     margin: 0 auto;

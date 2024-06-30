@@ -12,6 +12,6 @@
     }
   </ion-card-header>
   <ion-card-content>
-      <app-thing *ngFor="let item of elements$ | async" [data]="item"/>
+      <app-thing *ngFor="let item of childrens$ | async" [data]="item"/>
   </ion-card-content> 
 </ion-card>

@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+
+import { Store } from '@ngrx/store';
+import { login } from '../store/app.actions';
+
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader,
@@ -9,11 +13,6 @@ import {
   IonInput,
   IonButton,
 } from '@ionic/angular/standalone';
-import { Store } from '@ngrx/store';
-
-import { FlatComponent } from 'src/app/components/flat/flat.component';
-import { FormComponent } from 'src/app/components/form/form.component';
-import { login } from '../store/app.actions';
 
 @Component({
   selector: 'app-auth',

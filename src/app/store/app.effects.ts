@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
+
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { Observable, of } from 'rxjs';
-import { map, exhaustMap, catchError, finalize } from 'rxjs/operators';
-
-import ApiService from '../services/api.service';
-import { AttachInterface } from '../models/attach.model';
-import { ThingInterface } from '../models/thing.model';
+import { of, map, exhaustMap, catchError } from 'rxjs';
 
 import * as AppActions from './app.actions';
-import { Router } from '@angular/router';
-import AuthService from '../services/auth.service';
+
+import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
+
+import { AttachInterface } from '../models/attach.model';
+import { ThingInterface } from '../models/thing.model';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -18,17 +19,16 @@ import AuthService from '../services/auth.service';
 export class AppEffects {
   constructor(
     private actions$: Actions,
+
     private apiService: ApiService,
     private authService: AuthService,
-    private router: Router
   ) {}
 
   logout$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AppActions.logout),
       map(() => {
-        this.router.navigate(['/auth']);
-        return AppActions.unauthorized();
+        return AppActions.setUnauthorized();
       })
     );
   });
@@ -39,35 +39,33 @@ export class AppEffects {
       exhaustMap(({ authDto }) => {
         return this.authService.auth(authDto).pipe(
           map(() => {
-            this.router.navigate(['/']);
-            return AppActions.loginSuccess();
+            return AppActions.setAuthorized();
           }),
           catchError((response) =>
             of(
               AppActions.messageAdd({
                 message: {
                   text:
-                    response.status === 401
+                    response.status === HttpStatusCode.Unauthorized
                       ? 'Wrong credentials'
                       : 'Auth failure',
                   type: 'error',
                 },
               })
             )
-          ),
+          )
         );
       })
     );
   });
 
-  // LOAD
   load$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AppActions.load),
       exhaustMap(() => {
         return this.apiService.load().pipe(
           map(({ attaches, things }) => {
-            // @todo map dto to model
+            /** @todo Implement Dto Mapper */
             return AppActions.loadSucess({
               things: things as ThingInterface[],
               attaches: attaches as AttachInterface[],
@@ -79,20 +77,19 @@ export class AppEffects {
                 message: { text: 'Loading failure', type: 'error' },
               })
             )
-          ),
+          )
         );
       })
     );
   });
 
-  // ATTACH
   attach$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AppActions.thingAttach),
       exhaustMap(({ element, ref }) => {
         return this.apiService.attach(element, ref).pipe(
           map((attach) => {
-            return AppActions.thingAttachedSuccess({
+            return AppActions.thingAttachSuccess({
               attach,
             });
           }),
@@ -105,21 +102,19 @@ export class AppEffects {
                 },
               })
             )
-          ),
+          )
         );
       })
     );
   });
 
-  // CREATE
   create$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AppActions.thingCreate),
       exhaustMap(({ thing }) => {
         return this.apiService.create(thing).pipe(
           map((thing) => {
-            return AppActions.thingCreatedSuccess({
-              // @todo map dto to model
+            return AppActions.thingCreateSuccess({
               thing: thing as ThingInterface,
             });
           }),
@@ -132,20 +127,19 @@ export class AppEffects {
                 },
               })
             )
-          ),
+          )
         );
       })
     );
   });
 
-  // DELETE
   delete$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(AppActions.thingDelete),
       exhaustMap(({ thingId }) => {
         return this.apiService.delete(thingId).pipe(
           map(() => {
-            return AppActions.thingDeletedSuccess({ thingId });
+            return AppActions.thingDeleteSuccess({ thingId });
           }),
           catchError(({ error }) =>
             of(
@@ -156,7 +150,7 @@ export class AppEffects {
                 },
               })
             )
-          ),
+          )
         );
       })
     );

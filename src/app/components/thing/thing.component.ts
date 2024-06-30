@@ -1,13 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ThingInterface } from 'src/app/models/thing.model';
 
-import { NgClass, NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { setSelected, thingAttach } from 'src/app/store/app.actions';
 import {
   selectAppSelected,
   selectAttachedThings,
 } from 'src/app/store/app.selector';
+
 import { Observable, take } from 'rxjs';
+
+import { ThingInterface } from 'src/app/models/thing.model';
+
+import { NgClass, NgIf, NgFor, AsyncPipe } from '@angular/common';
+
 import {
   IonItem,
   IonList,
@@ -17,8 +22,8 @@ import {
   IonCardTitle,
   IonCardContent,
   IonText,
+  IonCard,
 } from '@ionic/angular/standalone';
-import { thingSelect, thingAttach } from 'src/app/store/app.actions';
 
 @Component({
   selector: 'app-thing',
@@ -26,6 +31,7 @@ import { thingSelect, thingAttach } from 'src/app/store/app.actions';
   styleUrl: './thing.component.scss',
   standalone: true,
   imports: [
+    IonCard,
     IonText,
     IonCardContent,
     IonCardTitle,
@@ -50,17 +56,18 @@ export class ThingComponent implements OnInit {
   protected freeSize: ThingInterface['size'] = 0;
 
   protected selected$: Observable<ThingInterface['id'] | null>;
-  protected elements$: Observable<ThingInterface[]>;
+  protected childrens$: Observable<ThingInterface[]>;
 
   constructor(private store: Store) {
-    this.elements$ = this.store.select(selectAttachedThings(this.data.id));
-    this.selected$ = this.store.select(selectAppSelected); // select(selectSelected) :)
+    this.selected$ = this.store.select(selectAppSelected);
+    this.childrens$ = this.store.select(selectAttachedThings(this.data.id));
   }
 
-  // input data is undefined in constructor ...
   ngOnInit(): void {
-    this.elements$ = this.store.select(selectAttachedThings(this.data.id));
-    this.elements$.pipe().subscribe((childs) => {
+    this.childrens$ = this.store.select(selectAttachedThings(this.data.id)); // input data is undefined in constructor ...
+    
+    // Calculate Thing free space
+    this.childrens$.pipe().subscribe((childs) => {
       let free = this.data.size;
       childs.forEach((child) => {
         free -= child.size;
@@ -72,15 +79,18 @@ export class ThingComponent implements OnInit {
   click() {
     this.selected$.pipe(take(1)).subscribe((selected) => {
       if (selected) {
+        // App has selected, then try to attach
         if (selected === this.data.id) {
-          this.store.dispatch(thingSelect({ selected: null }));
+          this.store.dispatch(setSelected({ selected: null }));
         } else {
           this.store.dispatch(
             thingAttach({ element: selected, ref: this.data.id })
           );
         }
       } else {
-        this.store.dispatch(thingSelect({ selected: this.data.id }));
+        // Otherwise set selected
+        /** @todo implement front-end validation as well */
+        this.store.dispatch(setSelected({ selected: this.data.id }));
       }
     });
   }

@@ -1,48 +1,40 @@
 import { Component } from '@angular/core';
-import { NgForOf, AsyncPipe, NgIf, NgClass } from '@angular/common';
 
 import { Store } from '@ngrx/store';
-import { ThingInterface } from 'src/app/models/thing.model';
-
+import { thingDelete } from 'src/app/store/app.actions';
 import {
   selectAppSelected,
   selectNotAttachedThings,
 } from 'src/app/store/app.selector';
+
 import { Observable } from 'rxjs';
 
-import {
-  IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonFab,
-  IonFabButton,
-  IonIcon, IonCol, IonRow, IonGrid } from '@ionic/angular/standalone';
+import { NgForOf, AsyncPipe, NgIf, NgClass } from '@angular/common';
+import { IonFab, IonFabButton, IonIcon } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons'; // Import this
+import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
 
 import { ThingComponent } from '../thing/thing.component';
-import { thingDelete } from 'src/app/store/app.actions';
+
+import { ThingInterface } from 'src/app/models/thing.model';
 
 @Component({
   selector: 'app-flat',
   templateUrl: './flat.component.html',
   styleUrl: './flat.component.scss',
   standalone: true,
-  imports: [IonGrid, IonRow, IonCol, 
-    IonIcon,
-    IonFabButton,
-    IonFab,
-    IonLabel,
-    IonItem,
-    IonList,
-    IonContent,
+  imports: [
+    ThingComponent,
+
     NgForOf,
     NgIf,
     NgClass,
     AsyncPipe,
-    ThingComponent,
+
+    IonFabButton,
+    IonFab,
+    IonIcon,
   ],
 })
 export class FlatComponent {

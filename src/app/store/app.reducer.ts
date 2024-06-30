@@ -7,13 +7,25 @@ import {
   AppState,
 } from './app.state';
 import * as AppActions from './app.actions';
+
 import { MessageInterface } from '../models/message.model';
 
 export const reducer = createReducer(
   initialState,
 
-  // APP
+  /**
+   * App reducers
+   */
 
+  // set Loading on Login
+  on(AppActions.login, (state): AppState => {
+    return {
+      ...state,
+      loading: true,
+    };
+  }),
+
+  // set Data after it loaded from the back-end
   on(AppActions.loadSucess, (state, { attaches, things }) => {
     return {
       ...state,
@@ -24,13 +36,29 @@ export const reducer = createReducer(
     };
   }),
 
+  // set Unauthhorized
+  on(AppActions.setUnauthorized, (state): AppState => {
+    return {
+      ...state,
+      authorized: false,
+    };
+  }),
+  // set Authorizer
+  on(AppActions.setAuthorized, (state): AppState => {
+    return {
+      ...state,
+      authorized: true,
+    };
+  }),
+
+  // add Message
   on(AppActions.messageAdd, (state, { message }): AppState => {
     return {
       ...state,
       messages: [...state.messages, message],
     };
   }),
-
+  // clear Messages
   on(AppActions.messageClear, (state): AppState => {
     return {
       ...state,
@@ -38,30 +66,20 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AppActions.unauthorized, (state): AppState => {
+  // set Selected thing
+  on(AppActions.setSelected, (state, { selected }): AppState => {
     return {
       ...state,
-      authorized: false,
+      selected: selected,
     };
   }),
 
-  on(AppActions.login, (state): AppState => {
-    return {
-      ...state,
-      loading: true,
-    };
-  }),
+  /**
+   * Data reducers
+   */
 
-  on(AppActions.loginSuccess, (state): AppState => {
-    return {
-      ...state,
-      authorized: true,
-    };
-  }),
-
-  // THING
-
-  on(AppActions.thingAttachedSuccess, (state, { attach }) => {
+  // add Attach
+  on(AppActions.thingAttachSuccess, (state, { attach }) => {
     return {
       ...state,
       data: {
@@ -82,14 +100,8 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AppActions.thingSelect, (state, { selected }): AppState => {
-    return {
-      ...state,
-      selected: selected,
-    };
-  }),
-
-  on(AppActions.thingCreatedSuccess, (state, { thing }) => {
+  // add Thing
+  on(AppActions.thingCreateSuccess, (state, { thing }) => {
     return {
       ...state,
       messages: [
@@ -106,11 +118,11 @@ export const reducer = createReducer(
     };
   }),
 
-  on(AppActions.thingDeletedSuccess, (state, { thingId }) => {
+  // delete Thing
+  on(AppActions.thingDeleteSuccess, (state, { thingId }) => {
     const things = Object.values(
       thingAdapter.removeOne(thingId, state.data.things).entities
     ) as [];
-    // @todo update only children
     const updated = thingAdapter.setAll(things, state.data.things);
 
     return {

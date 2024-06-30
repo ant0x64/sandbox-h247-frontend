@@ -1,2 +1,8 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+:root {
+  --app-color-background-selected: #b0e770;
+  --app-color-not-selected-container-title: #f44336;
+  --app-color-not-selected-element-title: #9e9e9e;
+}

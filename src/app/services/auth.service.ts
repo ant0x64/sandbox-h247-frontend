@@ -9,11 +9,11 @@ import { tap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export default class AuthService {
+export class AuthService {
   private key = 'access_token';
 
   private api_url = environment.api_url;
-  private storage = localStorage;
+  private storage: Storage = localStorage;
 
   constructor(private http: HttpClient) {}
 

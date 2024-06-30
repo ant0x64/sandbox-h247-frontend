@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+
 import { AlertController } from '@ionic/angular';
 
 import { Store } from '@ngrx/store';
-import { messageClear } from './store/app.actions';
-import { selectMessages } from './store/app.selector';
-import { RouterModule } from '@angular/router';
+
+import { selectIsAuth, selectMessages } from './store/app.selector';
+import { messageClear, setAuthorized } from './store/app.actions';
+
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +18,34 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
 })
 export class AppComponent {
-  constructor(private store: Store, private alertController: AlertController) {
-    // @todo put into the service
+  constructor(
+    private store: Store,
+    private router: Router,
+    private authService: AuthService,
+    private alertController: AlertController
+  ) {
+    this.initMessageController();
+    this.initAuthController();
+  }
+
+  protected initAuthController() {
+    this.store
+      .select(selectIsAuth)
+      .pipe()
+      .subscribe((isAuth) => {
+        if (!isAuth) {
+          this.router.navigate(['/auth']);
+        } else {
+          this.router.navigate(['/']);
+        }
+      });
+
+    if (this.authService.getToken()) {
+      this.store.dispatch(setAuthorized());
+    }
+  }
+
+  protected initMessageController() {
     this.store
       .select(selectMessages)
       .pipe()
@@ -31,7 +61,7 @@ export class AppComponent {
           });
           await alert.present();
         });
-        // @todo queue on closed
+        /** @todo: Implement queue */
         this.store.dispatch(messageClear());
       });
   }

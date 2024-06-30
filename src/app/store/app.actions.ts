@@ -1,49 +1,79 @@
 import { createAction, props } from '@ngrx/store';
 
+import { AppState } from './app.state';
+
 import { ThingInterface } from '../models/thing.model';
 import { AttachInterface } from '../models/attach.model';
-import { AppState } from './app.state';
-import { AuthDto, ThingDto, TokenDto } from '../models/api.dto';
+import { MessageInterface } from '../models/message.model';
+import { AuthDto, ThingDto } from '../models/api.dto';
 
 export const enum ActionsList {
-  LOAD = '[EFFECT] Load',
-  LOAD_SUCCESS = '[EFFECT] Load Success',
-  LOAD_FAILURE = '[NOT IMPLEMENTED] Load Failure',
+  LOAD = '[APP] Load',
+  LOAD_SUCCESS = '[APP] Load Success',
+  LOAD_FAILURE = '[APP] Load Failure',
+  APP_SELECT = '[APP] Select Thing',
 
-  THING_ATTACH = '[EFFECT] Thing Attach',
-  ATTACH_SUCCESS = '[API] Attach Success',
+  MESSAGE_ADD = '[APP] Message Added',
+  MESSAGE_CLEAR = '[APP] Message Clear',
 
-  THING_SELECT = '[VIEW] Thing Select',
-  THING_CREATE = '[VIEW] Thing Create',
-  THING_CREATED_SUCCESS = '[API] Thing Created Success',
-  THING_DELETE = '[VIEW] Thing Delete',
-  DELETE_SUCCESS = '[VIEW] Delete Success',
+  LOGOUT = '[APP] Logout',
+  LOGIN = '[APP] Login',
+  LOGIN_SUCCESS = '[APP] Login Success',
+  UNAUTHORIZED = '[APP] Unauthorized',
 
-  MESSAGE_ADD = '[API] Message Added',
-  MESSAGE_CLEAR = '[API] Message Clear',
+  THING_ATTACH = '[Thing] Attach',
+  THING_ATTACH_SUCCESS = '[Thing] Attach Success',
 
-  LOGOUT = '[AUTH] Logout',
-  LOGIN = '[AUTH] Login',
-  LOGIN_SUCCESS = '[AUTH] Login Success',
-  UNAUTHORIZED = '[AUTH] Unauthorized',
+  THING_CREATE = '[Thing] Create',
+  THING_CREATE_SUCCESS = '[Thing] Create Success',
+  THING_DELETE = '[Thing] Delete',
+  THING_DELETE_SUCCESS = '[Thing] Delete Success',
 }
 
-// VIEW
-
+/**
+ * [APP]
+ */
 export const load = createAction(ActionsList.LOAD);
 
-// @see thingAttachedSuccess | thingAttachedFailure
+export const loadSucess = createAction(
+  ActionsList.LOAD_SUCCESS,
+  props<{ things: ThingInterface[]; attaches: AttachInterface[] }>()
+);
+
+export const loadFailure = createAction(
+  ActionsList.LOAD_FAILURE,
+  props<{ error: unknown }>()
+);
+
+export const login = createAction(
+  ActionsList.LOGIN,
+  props<{ authDto: AuthDto }>()
+);
+export const logout = createAction(ActionsList.LOGOUT);
+export const setAuthorized = createAction(ActionsList.LOGIN_SUCCESS);
+export const setUnauthorized = createAction(ActionsList.UNAUTHORIZED);
+
+export const setSelected = createAction(
+  ActionsList.APP_SELECT,
+  props<{ selected: AppState['selected'] }>()
+);
+
+export const messageAdd = createAction(
+  ActionsList.MESSAGE_ADD,
+  props<{ message: MessageInterface }>()
+);
+
+export const messageClear = createAction(ActionsList.MESSAGE_CLEAR);
+
+/**
+ * [Thing]
+ */
 export const thingAttach = createAction(
   ActionsList.THING_ATTACH,
   props<{
     element: AttachInterface['thing'];
     ref: AttachInterface['container'];
   }>()
-);
-
-export const thingSelect = createAction(
-  ActionsList.THING_SELECT,
-  props<{ selected: AppState['selected'] }>()
 );
 
 export const thingCreate = createAction(
@@ -56,20 +86,8 @@ export const thingDelete = createAction(
   props<{ thingId: ThingInterface['id'] }>()
 );
 
-// API
-
-export const loadSucess = createAction(
-  ActionsList.LOAD_SUCCESS,
-  props<{ things: ThingInterface[]; attaches: AttachInterface[] }>()
-);
-
-export const loadFailure = createAction(
-  ActionsList.LOAD_FAILURE,
-  props<{ error: any }>()
-);
-
-export const thingAttachedSuccess = createAction(
-  ActionsList.ATTACH_SUCCESS,
+export const thingAttachSuccess = createAction(
+  ActionsList.THING_ATTACH_SUCCESS,
   props<{
     attach: AttachInterface;
   }>()
@@ -77,35 +95,17 @@ export const thingAttachedSuccess = createAction(
 
 export const thingAttachedFailure = createAction(
   ActionsList.LOAD_FAILURE,
-  props<{ error: any }>()
+  props<{ error: unknown }>()
 );
 
-export const thingCreatedSuccess = createAction(
-  ActionsList.THING_CREATED_SUCCESS,
+export const thingCreateSuccess = createAction(
+  ActionsList.THING_CREATE_SUCCESS,
   props<{
     thing: ThingInterface;
   }>()
 );
 
-export const thingDeletedSuccess = createAction(
-  ActionsList.DELETE_SUCCESS,
+export const thingDeleteSuccess = createAction(
+  ActionsList.THING_DELETE_SUCCESS,
   props<{ thingId: ThingInterface['id'] }>()
 );
-
-type ElementOf<T> = T extends Array<infer U> ? U : never;
-
-export const messageAdd = createAction(
-  ActionsList.MESSAGE_ADD,
-  props<{ message: ElementOf<AppState['messages']> }>()
-);
-
-export const messageClear = createAction(ActionsList.MESSAGE_CLEAR);
-
-// TO SORT ..
-export const login = createAction(
-  ActionsList.LOGIN,
-  props<{ authDto: AuthDto }>()
-);
-export const loginSuccess = createAction(ActionsList.LOGIN_SUCCESS);
-export const logout = createAction(ActionsList.LOGOUT);
-export const unauthorized = createAction(ActionsList.UNAUTHORIZED);

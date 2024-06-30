@@ -1,3 +1,12 @@
+<style>
+    :host {
+      .container {
+        display: block;
+        margin-bottom: 2.5em;
+      }
+    }
+</style>
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
@@ -8,6 +17,10 @@
 
 <ion-content class="ion-padding">
   <h1 class="ion-margin-bottom">Create and move things around in your flat.</h1>
-  <app-form class="block"/>
-  <app-flat/>
+  <div class="container">
+    <app-form/>
+  </div>
+  <div class="container">
+    <app-flat/>
+  </div>
 </ion-content>

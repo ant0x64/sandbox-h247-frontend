@@ -1,9 +1,12 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { ThingInterface } from '../../models/thing.model';
+
+import { Store } from '@ngrx/store';
+import { thingCreate } from 'src/app/store/app.actions';
+
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import {
-  IonApp,
-  IonRouterOutlet,
   IonButton,
   IonModal,
   IonHeader,
@@ -12,25 +15,22 @@ import {
   IonInput,
   IonItem,
   IonTitle,
-  IonLabel,
   IonContent,
   IonSelect,
   IonSelectOption,
   IonList,
 } from '@ionic/angular/standalone';
-import { Store } from '@ngrx/store';
-import { thingCreate } from 'src/app/store/app.actions';
-import { NgIf } from '@angular/common';
+
+import { ThingInterface } from 'src/app/models/thing.model';
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   standalone: true,
   imports: [
-    IonList,
     NgIf,
+    IonList,
     IonContent,
-    IonLabel,
     IonTitle,
     IonItem,
     IonInput,
@@ -40,11 +40,9 @@ import { NgIf } from '@angular/common';
     IonHeader,
     IonModal,
     IonButton,
-    IonApp,
-    IonRouterOutlet,
-    FormsModule,
     IonSelect,
     IonSelectOption,
+    FormsModule,
   ],
 })
 export class FormComponent implements OnDestroy {
@@ -53,7 +51,7 @@ export class FormComponent implements OnDestroy {
   constructor(private store: Store) {}
 
   data = {
-    type: 'element',
+    type: 'element', // default type
   } as {
     size: ThingInterface['size'] | undefined;
     type: ThingInterface['type'] | undefined;
@@ -61,10 +59,11 @@ export class FormComponent implements OnDestroy {
 
   cancel() {
     this.modal?.dismiss();
+
+    // Reset size input
     this.data.size = undefined;
   }
   submit() {
-    // @todo add validation
     this.store.dispatch(
       thingCreate({
         thing: {

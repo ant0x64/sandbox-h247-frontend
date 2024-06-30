@@ -20,6 +20,7 @@ export interface AppState {
 
 export const thingAdapter = createEntityAdapter<ThingInterface>();
 export const attachAdapter = createEntityAdapter<AttachInterface>({
+  // Attach ID unique
   selectId: (attach) => attach.thing,
 });
 
